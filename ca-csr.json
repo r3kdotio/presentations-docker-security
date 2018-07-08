@@ -1,0 +1,16 @@
+{
+  "CN": "DO NOT TRUST ME Test CA",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "ZA",
+      "O": "Not for production",
+      "OU": "Test myregistry",
+      "ST": "Gauteng"
+    }
+  ]
+}
+

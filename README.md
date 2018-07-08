@@ -5,7 +5,7 @@ I am not a software security expert. I have an interest in promoting more secure
 
 # FOREWORD
 
-I am a member of OWASP and complies to their [code of ethics](https://www.owasp.org/index.php/About_The_Open_Web_Application_Security_Project#Code_of_Ethics).
+I am a member of OWASP and comply to their [code of ethics](https://www.owasp.org/index.php/About_The_Open_Web_Application_Security_Project#Code_of_Ethics).
 NEVER DO SECURITY TESTING ON SYSTEMS YOU DON'T OWN WITHOUT WRITTEN PERMISSION.
 
 Target audience: You will need to have experience in using Docker on the command line.

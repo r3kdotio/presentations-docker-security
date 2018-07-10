@@ -1,0 +1,5 @@
+FROM alpine:3.7
+RUN addgroup -g 2000 dockergroup \
+ && adduser -D -u 2001 -g dockergroup dockeruser
+USER dockeruser
+ENTRYPOINT ["touch","/tmp/createdbydockeruser"]

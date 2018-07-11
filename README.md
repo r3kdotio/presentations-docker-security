@@ -39,9 +39,13 @@ Applications inside a docker container should run as a non-privileged user and s
 A container with a volume shared with the host may allow a process in the docker container to edit files on the host.
 
 > cat /etc/resolv.conf
+
 > sudo docker run -v /etc/resolv.conf:/etc/resolv.conf  -it alpine:3.7 sh
+
 > vi cat /etc/resolv.conf; # Add I was here text comment
+
 > exit; # Exit from container
+
 > cat /etc/resolv.conf
 
 [Video](videos/senario_rootisbadforhostvolumes.m4v)
@@ -53,7 +57,9 @@ Force all volumes shared with the host to be read-only. sudo docker run -v /etc/
 ## Problem:
 
 > docker build -t dockeruser2001  - < Dockerfile.dockeruser2001
+
 > docker run -v/tmp:/tmp  dockeruser2001
+
 > ls -l /tmp/createdbydockeruser 
 
 [Video](videos/senario_uuid.m4v)
@@ -106,7 +112,9 @@ The Alpine container I ran as a bitcoin mining tool installed.
   add bit-coin-mine.sh /bin/bit-coin-mine.sh
 
 > docker build - < Dockerfile.bit-coin-mine
+
 > sudo docker tag XXXXX  myregsitry/alpine:3.7
+
 > docker push  myregsitry/alpine:3.7
 
 ## Solution:

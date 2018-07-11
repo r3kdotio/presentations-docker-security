@@ -13,8 +13,7 @@ Target audience: You will need to have experience in using Docker on the command
 # Setup
 
 For this demonstration
-Virtual box with docker registry
-Virtual box with docker client and docker daemon
+Virtual box with docker client and docker daemon. This machine will be made unusable (crashed).
 
 
 # Not being security conscious make you vulnerable
@@ -24,11 +23,12 @@ Consider the following scenario:
 
 Even as a root user in the container, commands like halt and reboot have no effect on the container and container host, but there are several vulnerabilities still.
 
-senario_haltshutdownrm.apng
+[Video](senario_haltshutdownrm.m4v)
 
 ## Problem:
 
-A container running as root user can delete privileged files in the container like rm /bin/ls
+A container running as root user can delete/overwrite privileged files in the container like rm /bin/ls
+[ZipSlip](https://github.com/snyk/zip-slip-vulnerability) is a real-world attack that exploits this.
 
 ## Solution:
 
@@ -44,7 +44,7 @@ A container with a volume shared with the host may allow a process in the docker
 > exit; # Exit from container
 > cat /etc/resolv.conf
 
-senario_rootisbadforhostvolumes.apng
+[Video](senario_rootisbadforhostvolumes.m4v)
 
 ## Solution:
 
@@ -56,7 +56,7 @@ Force all volumes shared with the host to be read-only. sudo docker run -v /etc/
 > docker run -v/tmp:/tmp  dockeruser2001
 > ls -l /tmp/createdbydockeruser 
 
-senario_uuid.apng
+[Video](senario_uuid.m4v)
 
 ## Solution:
 
@@ -87,6 +87,17 @@ Limit memory usage sudo docker run -m 200m -it alpine:3.7 sh
 
 ## Problem:
 
+A container can use all the disk space of the host. This can be exploited by a attack like a [ZipBomb](https://en.wikipedia.org/wiki/Zip_bomb) [42 Kilobytes Unzipped Make 4.5 Petabytes](https://www.ghacks.net/2008/07/27/42-kilobytes-unzipped-make-45-petabytes/)
+
+## Solution
+
+Limit the disk space a container can use.
+
+> sudo docker run -it --storage-opt size=1G alpine:3.7 sh
+(only available for the devicemapper, btrfs, overlay2, windowsfilter and zfs and not aufs)
+
+## Problem:
+
 The Alpine container I ran as a bitcoin mining tool installed.
 
 (Dockerfile.bit-coin-mine)
@@ -95,20 +106,23 @@ The Alpine container I ran as a bitcoin mining tool installed.
   add bit-coin-mine.sh /bin/bit-coin-mine.sh
 
 > docker build - < Dockerfile.bit-coin-mine
-> sudo docker tag ecc29a43438b  myregsitry/alpine:3.7
+> sudo docker tag XXXXX  myregsitry/alpine:3.7
 > docker push  myregsitry/alpine:3.7
 
 ## Solution:
 
-The standard docker registry does not have role-based access control and auditing.
+The 'standard' docker registry does not have role-based access control and auditing.
+Use a registry with role-based access control. Don't allow passwords to be shared. Audits are important.
 
 ## Problem:
 
-The standard docker registry typically has no password policies. A single user is usually shared among users and it is usually easily brute force attacked. 
+The standard docker registry typically has no password policies. A single user is usually shared among users and it is usually easily brute force attacked. (10 ms per try) 
 
 > docker run \
   --entrypoint htpasswd \
   registry:2 -Bbn user1 password1 > auth/htpasswd
+
+## Solution:
 
 The standard docker registry should be replaced with Sonatype nexus, Azure Container Registry or any registry with role-based access control and auditing.
 

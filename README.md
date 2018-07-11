@@ -23,7 +23,7 @@ Consider the following scenario:
 
 Even as a root user in the container, commands like halt and reboot have no effect on the container and container host, but there are several vulnerabilities still.
 
-[Video](senario_haltshutdownrm.m4v)
+[Video](videos/senario_haltshutdownrm.m4v)
 
 ## Problem:
 
@@ -44,7 +44,7 @@ A container with a volume shared with the host may allow a process in the docker
 > exit; # Exit from container
 > cat /etc/resolv.conf
 
-[Video](senario_rootisbadforhostvolumes.m4v)
+[Video](videos/senario_rootisbadforhostvolumes.m4v)
 
 ## Solution:
 
@@ -56,7 +56,7 @@ Force all volumes shared with the host to be read-only. sudo docker run -v /etc/
 > docker run -v/tmp:/tmp  dockeruser2001
 > ls -l /tmp/createdbydockeruser 
 
-[Video](senario_uuid.m4v)
+[Video](videos/senario_uuid.m4v)
 
 ## Solution:
 

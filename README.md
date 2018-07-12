@@ -19,20 +19,12 @@ Virtual box with docker client and docker daemon. This machine will be made unus
 # Not being security conscious make you vulnerable
 
 Consider the following scenario:
-> sudo docker run -it alpine:3.7 sh
+> docker run -it alpine:3.7 sh
 
 Even as a root user in the container, commands like halt and reboot have no effect on the container and container host, but there are several vulnerabilities still.
+The container has a limited attack surface.
 
 [Video](videos/senario_haltshutdownrm.m4v)
-
-## Problem:
-
-A container running as root user can delete/overwrite privileged files in the container like rm /bin/ls
-[ZipSlip](https://github.com/snyk/zip-slip-vulnerability) is a real-world attack that exploits this.
-
-## Solution:
-
-Applications inside a docker container should run as a non-privileged user and should not be able to delete any critical files
 
 ## Problem:
 
@@ -40,7 +32,7 @@ A container with a volume shared with the host may allow a process in the docker
 
 > cat /etc/resolv.conf
 
-> sudo docker run -v /etc/resolv.conf:/etc/resolv.conf  -it alpine:3.7 sh
+> docker run -v /etc/resolv.conf:/etc/resolv.conf  -it alpine:3.7 sh
 
 > vi cat /etc/resolv.conf; # Add I was here text comment
 
@@ -52,9 +44,26 @@ A container with a volume shared with the host may allow a process in the docker
 
 ## Solution:
 
-Force all volumes shared with the host to be read-only. sudo docker run -v /etc/resolv.conf:/etc/resolv.conf:ro  -it alpine:3.7 sh
+Force all volumes shared with the host to be read-only. docker run -v /etc/resolv.conf:/etc/resolv.conf:ro  -it alpine:3.7 sh
 
 ## Problem:
+
+A container running as root user can delete/overwrite privileged files in the container like rm /bin/ls
+[ZipSlip](https://github.com/snyk/zip-slip-vulnerability) is a real-world attack that exploits this.
+
+> docker run -v /etc/resolv.conf:/etc/resolv.conf  -it alpine:3.7 sh
+
+> rm /bin/ls
+
+> ls
+
+## Solution:
+
+Applications inside a docker container should run as a non-privileged user and should not be able to delete any critical files
+
+## Problem:
+
+> cat Dockerfile.dockeruser2001
 
 > docker build -t dockeruser2001  - < Dockerfile.dockeruser2001
 
@@ -80,14 +89,29 @@ Consider the following c program that allocates all the memory available to it. 
 
     int main() {
        printf("BEWARE : about to consume all memory");
+       int count = 0;
        while(1==1){
+          printf("Consume ram "+ count ++);
           malloc( 1024*1024*1024*1024 );
        }
     }
 
+> gcc use-all-memory.c -o use-all-memory
+
+> docker run -d -it --name use-all-memory alpine:3.7 sh
+
+> docker cp use-all-memory use-all-memory:/tmp/use-all-memory
+
+> docker exec -it use-all-memory sh
+
+> /tmp/use-all-memory
+
+
 ## Solution:
 
-Limit memory usage sudo docker run -m 200m -it alpine:3.7 sh
+Limit memory usage 
+
+> docker run -d -it --name use-200m-memory -m 200m -it alpine:3.7 sh
 
 > docker stats
 
@@ -111,7 +135,9 @@ The Alpine container I ran as a bitcoin mining tool installed.
   FROM alpine:3.7
   add bit-coin-mine.sh /bin/bit-coin-mine.sh
 
-> docker build - < Dockerfile.bit-coin-mine
+> cat bit-coin-mine/Dockerfile.bit-coin-mine
+
+> docker build bit-coin-mine/
 
 > sudo docker tag XXXXX  myregsitry/alpine:3.7
 

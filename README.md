@@ -98,7 +98,7 @@ Consider the following c program that allocates all the memory available to it. 
 
 > gcc use-all-memory.c -o use-all-memory
 
-> docker run -d -it --name use-all-memory alpine:3.7 sh
+> docker run -d -it --name use-all-memory ubuntu:18.04 sh
 
 > docker cp use-all-memory use-all-memory:/tmp/use-all-memory
 
@@ -111,7 +111,7 @@ Consider the following c program that allocates all the memory available to it. 
 
 Limit memory usage 
 
-> docker run -d -it --name use-200m-memory -m 200m -it alpine:3.7 sh
+> docker run -d -it --name use-200m-memory -m 200m -it ubuntu:18.04 sh
 
 > docker stats
 
